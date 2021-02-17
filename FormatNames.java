@@ -1,4 +1,5 @@
 import java.io.*;
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.Scanner;
 
@@ -23,10 +24,11 @@ public class FormatNames
 	
 	//Finally, add code to read the filenames as arguments from the command line.
 	
+	private static final int MAX_NAME_LENGTH = 20; //For date alignment
+	private static final int DATE_LENGTH = 8; //Without slash formatting
+	
 	public static void main(String[] args)
 	{
-		final int MAX_NAME_LENGTH = 20; //For date alignment
-		
 		try
 		{
 			File inputFile;
@@ -56,69 +58,27 @@ public class FormatNames
 				String data = reader.nextLine();
 				char[] dataArr = data.toCharArray();
 				
-				StringBuilder name = new StringBuilder();
-				int nameCount = 0;
-				boolean space = true; //Check for capital letter at start of word
+				//Split name and date
+				char[] nameArr = sepLetter(dataArr);
+				char[] dateArr = sepDigit(dataArr);
 				
-				StringBuilder date = new StringBuilder();
-				int dateCount = 0; //Counter to insert slashes in right place
-				
-				//FORMAT
-				for (char c : dataArr)
-				{
-					//Appends all letters
-					if (Character.isLetter(c))
-					{
-						if (args[0].equals("-u"))
-						{
-							name.append(Character.toUpperCase(c));
-						}
-						else if (space) //If start of word, give upper case
-						{
-							name.append(Character.toUpperCase(c));
-							space = false;
-						}
-						else //Append rest of letters
-						{
-							name.append(c);
-						}
-						
-						nameCount++;
-					}
-					else if (Character.isSpaceChar(c)) //If space before word
-					{
-						space = true;
-						name.append(" ");
-					}
-					
-					//Appends all numbers
-					if (Character.isDigit(c))
-					{
-						date.append(c);
-						dateCount++;
-					}
-					
-					//Add slashes to date
-					if (dateCount == 2 /*D/M*/ || dateCount == 4 /*M/Y*/)
-					{
-						date.append("/");
-					}
-				}
+				formatName(nameArr);
+				dateArr = formatDate(dateArr);
 				
 				//System log
-				System.out.println(name + "" +date);
+				System.out.println(String.valueOf(nameArr) + String.valueOf(dateArr));
 				
 				//WRITE NAME
-				writer.write(String.valueOf(name));
+				writer.write(String.valueOf(nameArr));
 				
 				//DATE SPACE FORMAT
-				for (int i = MAX_NAME_LENGTH - nameCount; i > 0; i--)
+				for (int i = MAX_NAME_LENGTH - nameArr.length; i > 0; i--)
 				{
 					writer.write(" ");
 				}
 				
 				//WRITE DATE
-				writer.write(date + "\n");
+				writer.write(String.valueOf(dateArr) + "\n");
 				
 				//END WRITE
 				writer.flush();
@@ -132,5 +92,100 @@ public class FormatNames
 			System.out.println("Error.");
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * Separates the letters (and spaces) in an array and returns them in a new array.
+	 * @param arr array to be separated
+	 * @return string (StringBuilder)
+	 */
+	public static char[] sepLetter(char[] arr)
+	{
+		char[] newArr = new char[arr.length - DATE_LENGTH];
+		int count = 0; //Counts new array elements
+		
+		for (char c : arr)
+		{
+			if (Character.isLetter(c) || Character.isSpaceChar(c))
+			{
+				newArr[count] = c;
+				count++;
+			}
+		}
+		
+		return newArr;
+	}
+	
+	/**
+	 * Separates the digits in an array and returns them in a new array.
+	 * @param arr array to be separated
+	 * @return string (StringBuilder)
+	 */
+	public static char[] sepDigit(char[] arr)
+	{
+		char[] newArr = new char[DATE_LENGTH];
+		int count = 0; //Counts new array elements
+		
+		for (char c : arr)
+		{
+			if (Character.isDigit(c))
+			{
+				newArr[count] = c;
+				count++;
+			}
+		}
+		
+		return newArr;
+	}
+	
+	/**
+	 * Formats lowercase char array containing a name into title case.
+	 * @param arr array to be formatted
+	 */
+	public static void formatName(char[] arr)
+	{
+		boolean space = true; //Check for capital letter at start of word
+		
+		for (int i = 0; i < arr.length; i++)
+		{
+			if (Character.isLetter(arr[i]))
+			{
+				if (space) //If start of word, give upper case
+				{
+					arr[i] = Character.toUpperCase(arr[i]);
+					space = false;
+				}
+			}
+			else if (Character.isSpaceChar(arr[i]))
+			{
+				space = true;
+			}
+		}
+	}
+	
+	/**
+	 * Formats lowercase char array containing a name into title case.
+	 * @param arr array to be formatted
+	 * @return formatted array
+	 */
+	public static char[] formatDate(char[] arr)
+	{
+		char[] newArr = new char[DATE_LENGTH + 2];
+		int count = 0;
+		
+		for (char c : arr)
+		{
+			if (count == 2  /*D/M*/ || count == 5 /*M/Y*/) //Add slash
+			{
+				newArr[count] = '/';
+				count++;
+			}
+			
+			newArr[count] = c;
+			count++;
+			
+		}
+		
+		return newArr;
 	}
 }
