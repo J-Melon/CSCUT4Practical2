@@ -29,12 +29,24 @@ public class FilesInOut {
 		
 		try
 		{
+			File inputFile;
+			File outputFile;
+			
+			if (args[0].equals("-u"))
+			{
+				inputFile = new File(args[1]);
+				outputFile = new File(args[2]);
+			}
+			else
+			{
+				inputFile = new File(args[0]);
+				outputFile = new File(args[1]);
+			}
+			
 			//INPUT
-			File inputFile = new File("input.txt");
 			Scanner reader = new Scanner(inputFile);
 			
 			//OUTPUT
-			File outputFile = new File("formatted.txt");
 			outputFile.createNewFile();
 			FileWriter writer = new FileWriter(outputFile);
 			
@@ -57,7 +69,11 @@ public class FilesInOut {
 					//Appends all letters
 					if (Character.isLetter(c))
 					{
-						if (space) //If start of word, give upper case
+						if (args[0].equals("-u"))
+						{
+							name.append(Character.toUpperCase(c));
+						}
+						else if (space) //If start of word, give upper case
 						{
 							name.append(Character.toUpperCase(c));
 							space = false;
@@ -88,6 +104,9 @@ public class FilesInOut {
 						date.append("/");
 					}
 				}
+				
+				//System log
+				System.out.println(name + "" +date);
 				
 				//WRITE NAME
 				writer.write(String.valueOf(name));
