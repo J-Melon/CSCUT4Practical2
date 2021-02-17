@@ -7,9 +7,8 @@ import java.util.Scanner;
  * CSCU9T4 Java strings and files exercise.
  *
  */
-public class FormatName
+public class FormatNames
 {
-	
 	//Replace this with statements to set the file name (input) and file name (output).
 	//Initially it will be easier to hardcode suitable file names.
 	
