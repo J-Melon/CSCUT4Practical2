@@ -1,6 +1,4 @@
 import java.io.*;
-import java.util.Arrays;
-import java.util.Locale;
 import java.util.Scanner;
 
 /**
@@ -62,7 +60,15 @@ public class FormatNames
 				char[] nameArr = sepLetter(dataArr);
 				char[] dateArr = sepDigit(dataArr);
 				
-				formatName(nameArr);
+				if (args[0].equals("-u"))
+				{
+					formatUpperCase(nameArr);
+				}
+				else
+				{
+					formatTitleCase(nameArr);
+				}
+				
 				dateArr = formatDate(dateArr);
 				
 				//System log
@@ -142,7 +148,7 @@ public class FormatNames
 	 * Formats lowercase char array containing a name into title case.
 	 * @param arr array to be formatted
 	 */
-	public static void formatName(char[] arr)
+	public static void formatTitleCase(char[] arr)
 	{
 		boolean space = true; //Check for capital letter at start of word
 		
@@ -164,7 +170,19 @@ public class FormatNames
 	}
 	
 	/**
-	 * Formats lowercase char array containing a name into title case.
+	 * Formats lowercase char array into uppercase.
+	 * @param arr array to be formatted
+	 */
+	public static void formatUpperCase(char[] arr)
+	{
+		for (int i = 0; i < arr.length; i++)
+		{
+			arr[i] = Character.toUpperCase(arr[i]);
+		}
+	}
+	
+	/**
+	 * Formats lowercase char array into title case.
 	 * @param arr array to be formatted
 	 * @return formatted array
 	 */
