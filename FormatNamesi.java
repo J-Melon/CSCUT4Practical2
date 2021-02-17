@@ -8,7 +8,7 @@ import java.util.Scanner;
  * CSCU9T4 Java strings and files exercise.
  *
  */
-public class FormatNamesm
+public class FormatNamesi
 {
 	//Replace this with statements to set the file name (input) and file name (output).
 	//Initially it will be easier to hardcode suitable file names.
@@ -62,6 +62,7 @@ public class FormatNamesm
 				char[] nameArr = sepLetter(dataArr);
 				char[] dateArr = sepDigit(dataArr);
 				
+				//FORMAT
 				if (args[0].equals("-u"))
 				{
 					formatUpperCase(nameArr);
@@ -78,7 +79,7 @@ public class FormatNamesm
 				
 				dateArr = formatDate(dateArr);
 				
-				//System log
+				//System log (no date space format)
 				System.out.println(String.valueOf(nameArr) + String.valueOf(dateArr));
 				
 				//WRITE NAME
@@ -188,6 +189,11 @@ public class FormatNamesm
 		}
 	}
 	
+	/**
+	 * Checks if a char array has a middle initial (could be modified to support multiple initials).
+	 * @param arr array to be formatted
+	 * @return false: no middle initial, true: middle initial present
+	 */
 	public static boolean checkMiddleName(char[] arr)
 	{
 		int spaceCount = 0;
@@ -203,6 +209,11 @@ public class FormatNamesm
 		return spaceCount >= 3;
 	}
 	
+	/**
+	 * Formats a char array with a middle initial, putting a dot after the middle initial.
+	 * @param arr array to be formatted
+	 * @return formatted array
+	 */
 	public static char[] formatMiddleName(char[] arr)
 	{
 		char[] newArr = new char[arr.length + 1]; //+1 handles middle dot
